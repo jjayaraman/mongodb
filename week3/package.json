@@ -1,0 +1,23 @@
+{
+  "name": "week3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jjayaraman/mongodb.git"
+  },
+  "author": "Jayakumar Jayaraman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jjayaraman/mongodb/issues"
+  },
+  "homepage": "https://github.com/jjayaraman/mongodb#readme",
+  "dependencies": {
+    "assert": "^1.4.1",
+    "mongodb": "^3.1.4"
+  }
+}
