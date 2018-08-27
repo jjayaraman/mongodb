@@ -1,5 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
+var commandLineArgs = require('command-line-args')
 
 const url = "mongodb://localhost:27017";
 const options = { useNewUrlParser: true }
