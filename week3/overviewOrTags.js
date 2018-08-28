@@ -65,7 +65,7 @@ var allOptions = [
 var numQueriesFinished = 0;
 var companiesSeen = {};
 
-for (var i=0; i<allOptions.length; i++) {
+for (var i = 0; i < allOptions.length; i++) {
     var query = queryDocument(allOptions[i]);
     queryMongoDB(query, i);
 }
@@ -74,22 +74,22 @@ for (var i=0; i<allOptions.length; i++) {
 
 function queryMongoDB(query, queryNum) {
 
-    MongoClient.connect('mongodb://localhost:27017/crunchbase', function(err, db) {
-        
+    MongoClient.connect('mongodb://localhost:27017', function (err, client) {
+
         assert.equal(err, null);
         console.log("Successfully connected to MongoDB for query: " + queryNum);
-        
-        var cursor = db.collection('companies').find(query);
-        
+
+        var cursor = client.db('crunchbase').collection('companies').find(query);
+
         var numMatches = 0;
-        
+
         cursor.forEach(
-            function(doc) {
+            function (doc) {
                 numMatches = numMatches + 1;
                 if (doc.permalink in companiesSeen) return;
                 companiesSeen[doc.permalink] = doc;
             },
-            function(err) {
+            function (err) {
                 assert.equal(err, null);
                 console.log("Query " + queryNum + " was:" + JSON.stringify(query));
                 console.log("Matching documents: " + numMatches);
@@ -97,12 +97,12 @@ function queryMongoDB(query, queryNum) {
                 if (numQueriesFinished == allOptions.length) {
                     report();
                 }
-                return db.close();
+                return client.close();
             }
         );
-        
+
     });
-    
+
 }
 
 
@@ -125,15 +125,21 @@ function queryDocument(options) {
            I urge you to test your query in the Mongo shell first and adapt it to fit
            the syntax for constructing query documents in this application.
         */
+
+        // query.overview = { $regex: options.overview, $options: "i" };
+        // query.tag_list = { $regex: options.overview, $options: "i" };
+
+        query.$or = [{ "overview": { $regex: options.overview, $options: "i" } }, { "tag_list": { $regex: options.overview, $options: "i" } }]
+
     }
 
     if ("milestones" in options) {
         query["milestones.source_description"] =
-            {"$regex": options.milestones, "$options": "i"};
+            { "$regex": options.milestones, "$options": "i" };
     }
 
     return query;
-    
+
 }
 
 
